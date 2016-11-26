@@ -1,6 +1,6 @@
 ##kanfang_demo
 
-仿QQ看房app
+仿QQ看房app---第七周学习Android路上
 
 ---
 关于作者：
