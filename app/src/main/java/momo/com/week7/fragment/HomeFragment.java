@@ -34,7 +34,6 @@ import momo.com.week7.ui.HouseDetailActivity;
 import momo.com.week7.ui.MyCaptureActivity;
 import momo.com.week7.utils.ApiManager;
 import momo.com.week7.utils.IntentUtils;
-import momo.com.week7.utils.LogPrint;
 import momo.com.week7.utils.SharedUtils;
 import momo.com.week7.widget.BannerView;
 import momo.com.week7.widget.HomeSecondView;
@@ -151,7 +150,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AbsL
                 return Integer.valueOf(type);
             }
 
-
+            //用adapter设置listview的item能否点击 不包含listview头部
+//            @Override
+//            public boolean isEnabled(int position) {
+//                return super.isEnabled(position);
+//            }
         };
 
 
@@ -225,7 +228,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AbsL
         lv.setOnScrollListener(this);
         lv.setOnItemClickListener(this);
 
-        //设置城市
+        //设置城市广告
         banner.setCityId(cityId);
 
         /**
@@ -317,6 +320,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AbsL
             }
             break;
             case R.id.btn_scan: {
+                //跳转到扫描二维码界面
                 Intent intent = new Intent(getActivity(), MyCaptureActivity.class);
                 startActivityForResult(intent,INTENT_REQUEST_SCAN);
             }
@@ -345,7 +349,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AbsL
                         tv_cityName.setText(cityName);
                         //联网获取数据
                         getData();
-                        //设置Banner
+                        //设置Banner广告
                         banner.setCityId(cityId);
                     }
                 }
@@ -369,7 +373,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AbsL
 
     //联网获取该城市数据
     private void getData() {
-        LogPrint.print("getData momo");
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiManager.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -386,13 +390,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, AbsL
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                LogPrint.print("buttonmore:" + buttonmore.toString());
                 String value = response.body();
-                //把String解析成HomePageBean
+                //用Gson把String解析成HomePageBean
                 Gson gson = new Gson();
                 HomePageBean bean = gson.fromJson(value, new TypeToken<HomePageBean>() {
                 }.getType());
-                //刚进入清空data数据
+                //刚进入清空data数据，加载更多不用清空
                 if (buttonmore.equals("0")) {
                     data.clear();
                 }

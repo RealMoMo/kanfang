@@ -26,7 +26,6 @@ public class CityChoiceAdapter extends BaseAdapter implements StickyListHeadersA
     List<CityBean> allData;
     LayoutInflater inflater;
 
-//    List<String> pingyinList= new ArrayList<>();
 
     public CityChoiceAdapter(Context context,List<CityBean> data) {
         this.data = data;
@@ -40,11 +39,7 @@ public class CityChoiceAdapter extends BaseAdapter implements StickyListHeadersA
     public void setAllData(List<CityBean> data){
         allData.clear();
         allData.addAll(data);
-//        for(CityBean bean : allData){
-//            String pinyinName = PingyinUtils.getInstance().getPinYinHeadChar(bean.getCityname());
-//            pingyinList.add(pinyinName);
-//            LogPrint.print(pinyinName);
-//        }
+
     }
 
     //======================Stick....
@@ -126,7 +121,7 @@ public class CityChoiceAdapter extends BaseAdapter implements StickyListHeadersA
         }
     }
 
-//    int i=-1;
+
 
     /**
      *
@@ -164,10 +159,6 @@ public class CityChoiceAdapter extends BaseAdapter implements StickyListHeadersA
             }
 
 
-
-
-
-
         }
         //把搜索的结果设置给自己，再更新界面
         notifyDataSetChanged();
@@ -194,8 +185,7 @@ public class CityChoiceAdapter extends BaseAdapter implements StickyListHeadersA
 
     private boolean searchAllWord(CityBean bean,String strSearch){
             String cityName = bean.getCitypinyin().replace(" ","");
-//        String matchStr = cityName.substring(0, cityName.length() < strSearch.length() ? cityName.length() : strSearch.length());
-//        return matchStr.equals(strSearch);
+
        return  isSame(cityName,strSearch);
 
     }
@@ -205,10 +195,7 @@ public class CityChoiceAdapter extends BaseAdapter implements StickyListHeadersA
         String[] cityName = bean.getCitypinyin().split(" ");
         for (int i=0;i<cityName.length;i++) {
 
-//            String matchStr =cityName[i].substring(0, cityName[i].length() < strSearch.length() ? cityName[i].length() : strSearch.length());
-//            if((flag=matchStr.equals(strSearch))==true){
-//                return true;
-//            }
+
             if(isSame(cityName[i],strSearch)==true){
                 return true;
             }

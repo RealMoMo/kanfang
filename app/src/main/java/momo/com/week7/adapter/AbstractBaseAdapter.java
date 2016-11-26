@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * 自定义抽象万能 BaseAdapter
- * 可传入任意数据源
+ * 可传入任意数据源、布局
  */
 public abstract class AbstractBaseAdapter<T> extends BaseAdapter{
     //数据源

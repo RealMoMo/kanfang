@@ -113,7 +113,7 @@ public class CityChoiceActivity extends BaseNoActionBarAndStatusActivity impleme
         Retrofit retrofit = new Retrofit.Builder()
                 //添加主机路径
                 .baseUrl(ApiManager.BASE_URL)
-                //添加转换工厂
+                //添加转换工厂---String类型（原封不动获取数据）
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
         //2.创建CityChoiceInterface接口实例
@@ -190,7 +190,7 @@ public class CityChoiceActivity extends BaseNoActionBarAndStatusActivity impleme
             }
         });
 
-        //设置侧滑控件slideview的监听
+        //设置侧滑控件slideview的监听--实现自定义SlideView的接口
         slideView.setOnSlideClick(this);
         //设置edittext文本变化监听
         et_search.addTextChangedListener(new TextWatcher() {

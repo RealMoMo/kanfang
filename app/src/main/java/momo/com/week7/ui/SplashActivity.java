@@ -26,7 +26,9 @@ public class SplashActivity extends AppCompatActivity implements ViewPager.OnPag
     ViewPager viewPager;
     List<Fragment> fragments;
 
+    //圆点的布局
     LinearLayout dot_layout;
+    //圆点ImageView的集合
     List<ImageView> dotViews;
 
     @Override
@@ -83,7 +85,7 @@ public class SplashActivity extends AppCompatActivity implements ViewPager.OnPag
         viewPager.setAdapter(adapter);
 
 
-        //设置viewpager切换动画
+        //设置viewpager切换动画 sdk>11
         viewPager.setPageTransformer(true,new MyTrans());
 
 
@@ -91,11 +93,14 @@ public class SplashActivity extends AppCompatActivity implements ViewPager.OnPag
 
     private void initDot() {
         dotViews = new ArrayList<>();
+        //设置圆点的宽高
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(20,20);
+        //设置margin属性
         params.setMargins(10,10,10,10);
         for(int i=0;i<fragments.size();i++){
             ImageView view = new ImageView(this);
             if(i==0){
+                //默认第一个选中
                 view.setImageResource(R.drawable.dot_shape_select);
             }else{
                 view.setImageResource(R.drawable.dot_shape_normal);
@@ -137,6 +142,7 @@ public class SplashActivity extends AppCompatActivity implements ViewPager.OnPag
                 if(view!=null){
                     //设置x的偏移量
                     view.setTranslationX(transX);
+
                 }
                 //下一个动画view的x偏移量
                 transX*=20f;
@@ -152,6 +158,7 @@ public class SplashActivity extends AppCompatActivity implements ViewPager.OnPag
 
     @Override
     public void onPageSelected(int position) {
+
         for(int i=0;i<dotViews.size();i++){
             if(i==position){
                 dotViews.get(i).setImageResource(R.drawable.dot_shape_select);
@@ -162,20 +169,28 @@ public class SplashActivity extends AppCompatActivity implements ViewPager.OnPag
 
     }
 
-    //判断引导界面是否能继续左滑(即有无惯性滑动)
+    //判断引导界面是否能继续左滑(即已到最右的一页，判断准则有无惯性滑动)---若有内容的滑动是有惯性滑动状态。(当然排除极端无聊的用户)
+    /**
+     * 1.有内容的滑动的状态值变化：
+     * 1--->2---->0
+     *
+     * 2.无内容的滑动的状态值变化：
+     * 1--->0
+     *
+     */
     boolean isLeftScroll;
 
     @Override
     public void onPageScrollStateChanged(int state) {
         //根据state进行判断
         switch (state){
-            //手指滑动
+            //手指滑动---状态值：1
             case ViewPager.SCROLL_STATE_DRAGGING:{
 
             }break;
-            //停止状态
+            //停止状态----状态值：0
             case ViewPager.SCROLL_STATE_IDLE:{
-                //如果是最后一页(继续左滑是没有惯性滑动的)，且没有惯性滑动时，跳转城市选择
+                //如果是最后一页(继续左滑是没有惯性滑动的)，且没有惯性滑动时，跳转城市选择界面
                 if(!isLeftScroll &&viewPager.getCurrentItem()==(viewPager.getAdapter().getCount()-1)){
                     Intent intent = new Intent(this,CityChoiceActivity.class);
                     startActivity(intent);
@@ -185,7 +200,7 @@ public class SplashActivity extends AppCompatActivity implements ViewPager.OnPag
                 isLeftScroll =false;
 
             }break;
-            //惯性滑动
+            //惯性滑动--状态值：2
             case ViewPager.SCROLL_STATE_SETTLING:{
                     isLeftScroll=true;
             }break;

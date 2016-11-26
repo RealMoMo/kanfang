@@ -16,6 +16,8 @@
         android:layout_height="1dp"
         android:background="#E1E1E3"/>
 
+<!--布局固定写法
+注意:id均是android的系统id-->
     <!--底部导航-->
     <android.support.v4.app.FragmentTabHost
         android:id="@android:id/tabhost"

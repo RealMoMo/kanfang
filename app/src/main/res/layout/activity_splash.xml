@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     >
 
-
+    <!--加载引导界面Fragment的ViewPager-->
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"

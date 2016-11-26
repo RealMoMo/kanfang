@@ -46,7 +46,11 @@ public class HouseDetailView extends LinearLayout{
         setOrientation(VERTICAL);
     }
 
-
+    /**
+     * 设置数据，绘制界面
+     *
+     * @param bean
+     */
     public void setData(HouseDetailBean bean){
 
         if(bean==null){
@@ -65,7 +69,7 @@ public class HouseDetailView extends LinearLayout{
         //==========来源 时间=============
         TextView tv_sourcetime = new TextView(getContext());
         tv_sourcetime.setTextSize(TypedValue.COMPLEX_UNIT_PX,getSize(R.dimen.house_time_textsize));
-        tv_sourcetime.setText(bean.getSource()+bean.getTime());
+        tv_sourcetime.setText(bean.getSource()+" "+bean.getTime());
         this.addView(tv_sourcetime,textParams);
         //===========分割线==============
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,2);
@@ -75,13 +79,17 @@ public class HouseDetailView extends LinearLayout{
         //============内容===============
         List<HouseDetailBean.ContentEntity> content = bean.getContent();
         for(HouseDetailBean.ContentEntity entity:content){
+            //取出数据，创建控件，设置数据
+            //根据数据类型，决定创建什么控件
             int type = entity.getType();
             String value =entity.getValue();
             switch (type){
                 //文本内容
                 case 1:{
+                    //文本内容
                     TextView tmp = new TextView(getContext());
                     tmp.setTextSize(TypedValue.COMPLEX_UNIT_PX,getSize(R.dimen.house_content_textsize));
+                    //设置文本行间距
                     tmp.setText(value);
                     //设置文本行间距
                     tmp.setLineSpacing(1.8f,1.8f);
@@ -92,6 +100,7 @@ public class HouseDetailView extends LinearLayout{
                 //图片内容
                 case 2:{
                     ImageView img = new ImageView(getContext());
+                    //加载图片
                     Glide.with(getContext()).load(value).into(img);
                     addView(img,textParams);
                 }break;
@@ -102,8 +111,9 @@ public class HouseDetailView extends LinearLayout{
 
     }
 
+    //把R.dimen中的尺寸转换成-->px
     private float getSize(int id){
-
+        //返回的是px
         return getResources().getDimensionPixelSize(id);
     }
 }

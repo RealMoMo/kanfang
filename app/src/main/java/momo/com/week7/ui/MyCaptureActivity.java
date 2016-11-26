@@ -20,7 +20,7 @@ public class MyCaptureActivity extends NoActionBarActivity implements CodeUtils.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
-        //创建CaptureFragment(框架自带的Fragment)
+        //创建CaptureFragment(框架自带的Fragment类)
         CaptureFragment cf = new CaptureFragment();
         //设置CaptureFragment的布局
         CodeUtils.setFragmentArgs(cf,R.layout.capture_fragment);

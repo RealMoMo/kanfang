@@ -79,8 +79,9 @@ public class WebViewActivity extends BaseNoActionBarAndStatusActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                pb.setVisibility(View.VISIBLE);
+
                 webView.setVisibility(View.GONE);
+                pb.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -93,6 +94,7 @@ public class WebViewActivity extends BaseNoActionBarAndStatusActivity {
     }
 
 
+    //点击backspace可返回上个页面，而不是退出(若webview只加载了一个页面)
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
@@ -100,6 +102,7 @@ public class WebViewActivity extends BaseNoActionBarAndStatusActivity {
             // 按返回时，看网页是否能返回
             if (webView.canGoBack()) {
                 webView.goBack();
+                //返回true webview自己处理
                 return true;
             }
         }

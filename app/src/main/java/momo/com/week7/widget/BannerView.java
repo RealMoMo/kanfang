@@ -49,7 +49,7 @@ public class BannerView extends FrameLayout{
     }
 
     private void init(){
-        //加载布局  参数3：true 与本自定义view绑定在一起
+        //加载布局  参数3：true xml定义banner与本自定义view绑定在一起
         LayoutInflater.from(getContext()).inflate(R.layout.home_banner_layout, this,true);
         //初始化控件
         banner = (Banner)findViewById(R.id.home_banner);
