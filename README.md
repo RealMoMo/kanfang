@@ -89,8 +89,8 @@ Everyone who has contributed code and reported issues and pull requests!
 
 
 ###TODO
-首页listview上拉加载更多数据的接口不适用，所以选择加载了加载相同的数据。
-因消息、我的界面要与QQ服务端进行交互，没有实现功能。
+<br>首页listview上拉加载更多数据的接口不适用，所以选择加载了加载相同的数据。</br>
+<br>因消息、我的界面要与QQ服务端进行交互，没有实现功能。</br>
 
 ###Version
 1.0----2016.11.26
