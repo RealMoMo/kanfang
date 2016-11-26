@@ -1,0 +1,1679 @@
+整理：
+
+框架：
+1.StickyListHeadersListView头部悬停的listview
+2.retrofit
+3.Gson
+4.Glide
+5.ultra-ptr下拉刷新控件
+6.youth.banner广告轮播框架
+7.cn.yipianfengye.android:zxing-library:2.1 二维码
+
+
+
+知识点：
+
+(自定义view自己看项目代码widget的package)
+
+1.全屏
+//去掉actionbar
+该Activity已改主题noActionBar
+//去掉状态栏(在setContextView之前设置)
+getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+2.延时操作
+
+在Android开发中我们可能会有延时执行某个操作的需求，例如我们启动应用的时候，一开始呈现的是一个引导页面，过了两三秒后，会自动跳转到主界面。这就是一个延时操作。 
+下面是实现延时执行操作的几种方法：
+
+2.1.使用线程的休眠实现延时操作
+
+   new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                Thread.sleep(3000);//休眠3秒
+                /**
+                 * 要执行的操作
+                 */
+                         }
+        }.start();
+
+2.2.使用TimerTask实现延时操作
+
+  TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+              /**
+               *要执行的操作
+               */
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 3000);//3秒后执行TimeTask的run方法
+
+2.3.使用Handler的postDelayed方法实现延时操作
+
+ Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               /**
+                *要执行的操作
+                */
+            }
+        }, 3000);//3秒后执行Runnable中的run方法
+		
+2.4利用AlarmManager，特点时刻广播指定意图 能实现，一般的简单任务不这么做。
+
+
+
+
+3.ViewPager切换动画 PageTransformer
+
+
+设置viewpager切换动画 sdk>11
+ViewPager.setPageTransformer(true,new MyTrans());
+
+
+MyTrans类
+实现viewPager的切换动画(平移动画)
+    class MyTrans implements  ViewPager.PageTransformer{
+
+        /**
+         * 根据偏移百分比，计算每个View的偏移比
+         * <p/>
+         * 每个View的偏移量依次递增
+         *
+         * @param page     当前Fragment的View
+         * @param position view的偏移百分比
+         */
+        @Override
+        public void transformPage(View page, float position) {
+            //page-->ViewGroup
+            //遍历page，拿到三个做动画的ImageView
+            //根据position设置View的属性
+
+            float transX = page.getWidth()*position;
+            //遍历page
+            for(int i=0;i<viewId.length;i++){
+                //找到动画view
+                View view = page.findViewById(viewId[i]);//动画的ImageView控件的id数组 int[] viewId ={R.id.iv1,R.id.iv2,R.id.iv3};
+                if(view!=null){
+                    //设置x的偏移量
+                    view.setTranslationX(transX);
+                }
+                //下一个动画view的x偏移量
+                transX*=20f;
+            }
+
+        }
+    }
+	
+	当然，还有很多炫酷的动画
+	
+	
+4.判断viewpager能否继续左滑，继而触发某些事件
+
+
+//判断引导界面是否能继续左滑(即已到最右的一页，判断准则有无惯性滑动)---若有内容的滑动是有惯性滑动状态。(当然排除极端无聊的用户)
+    /**
+     * 1.有内容的滑动的状态值变化：
+     * 1--->2---->0
+     *
+     * 2.无内容的滑动的状态值变化：
+     * 1--->0
+     *
+     */
+    boolean isLeftScroll;
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        //根据state进行判断
+        switch (state){
+            //手指滑动---状态值：1
+            case ViewPager.SCROLL_STATE_DRAGGING:{
+
+            }break;
+            //停止状态----状态值：0
+            case ViewPager.SCROLL_STATE_IDLE:{
+                //如果是最后一页(继续左滑是没有惯性滑动的)，且没有惯性滑动时，跳转城市选择界面
+                if(!isLeftScroll &&viewPager.getCurrentItem()==(viewPager.getAdapter().getCount()-1)){
+                    Intent intent = new Intent(this,CityChoiceActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                isLeftScroll =false;
+
+            }break;
+            //惯性滑动--状态值：2
+            case ViewPager.SCROLL_STATE_SETTLING:{
+                    isLeftScroll=true;
+            }break;
+        }
+    }
+	
+	
+5.解决edittext获取焦点问题
+在其父控件加上：
+android:focusable="true"
+android:focusableInTouchMode="true"
+
+
+6.retrofit联网获取数据
+
+========GET请求联网（无请求参数）=======
+
+
+    //主机地址，域名
+    public static final String BASE_URL="http://ikft.house.qq.com/";
+
+    //城市选择
+    public static final String CITY_CHOICE="index.php?guid=866500021200250&devua=appkft_1080_1920_XiaomiMI4LTE_1.8.3_Android19&act=kftcitylistnew&channel=71&devid=866500021200250&appname=QQHouse&mod=appkft";
+
+6.1.1接口类--CityChoiceInterface.class
+public interface CityChoiceInterface {
+
+    @GET(ApiManager.CITY_CHOICE)
+    Call<String> getCity();
+}
+
+
+6.1.2联网获取数据
+
+private void getCityData() {
+        //retrofit联网加载数据
+        //1.定义Retrofit对象，构建者模式
+        Retrofit retrofit = new Retrofit.Builder()
+                //添加主机路径
+                .baseUrl(ApiManager.BASE_URL)
+                //添加转换工厂---String类型（原封不动获取数据）
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+        //2.创建CityChoiceInterface接口实例
+        CityChoiceInterface city = retrofit.create(CityChoiceInterface.class);
+        //3.调用接口实例方法
+        //获取call
+        Call<String> call = city.getCity();
+        //4.发异步请求，解析数据
+        call.enqueue(new Callback<String>() {
+
+            /**请求成功回调
+             *
+             * 服务器正常返回
+             *
+             *
+             * @param call
+             * @param response
+             */
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                //得到下载数据
+                String value = response.body();
+               
+
+            }
+
+            /**请求失败回调
+             *
+             * 网络不通，服务挂 了
+             *
+             * @param call
+             * @param t
+             */
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+	
+	
+	=================GET请求联网（添加请求参数）==========================
+	
+6.2.1接口类
+
+ /**
+     * 首页 ListView内容
+     * <p/>
+     * 1)进入时：reqnum=10,pageflag=0,buttonmore=0;
+     * 2)点击查看更多时：reqnum=20,pageflag=0,buttonmore=1;
+     * 3)刷新时：reqnum=20,pageflag=1,buttonmore=1;
+     * pageflag=0;buttonmore=0;cityid=1;
+     */
+    public static final String HOME_PAGE="index.php?guid=866500021200250&devua=appkft_1080_1920_XiaomiMI4LTE_1.8.3_Android19&devid=866500021200250&appname=QQHouse&mod=appkft&reqnum=20&act=newslist&channel=71";
+
+public interface HomePageInterface {
+
+    @GET(ApiManager.HOME_PAGE)
+    Call<String> getListContent(@Query("pageflag")String pageflag,
+                                @Query("buttonmore")String buttonmore,
+                                @Query("cityid")String cityid);
+
+    @GET(ApiManager.HOME_BANNER)
+    Call<BannerBean> getBannerBean(@Query("cityid")String cityid);
+
+
+    @GET(ApiManager.HOUSE_DETAIL)
+    Call<HouseDetailBean> getHouseDetailBean(@Query("newsid")String newsid);
+
+//    @GET(ApiManager.TEST)
+//    Call<String> getTest(@Query("pageflag")String pageflag,
+//                         @Query("buttonmore")String buttonmore,
+//                         @Query("cityid")String cityid);
+//
+//    @GET(ApiManager.TEST)
+//    Call<String> getTestMore(@Query("pageflag")String pageflag,
+//                         @Query("buttonmore")String buttonmore,
+//                         @Query("cityid")String cityid,
+//                             @Query("lastid")String lastid);
+}
+
+
+6.2.2联网获取数据
+
+//联网获取该城市数据
+    private void getData() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiManager.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        HomePageInterface homePage = retrofit.create(HomePageInterface.class);
+        
+        Call<String> call = homePage.getListContent("0", buttonmore, cityId);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) { 
+                String value = response.body();
+                //用Gson把String解析成HomePageBean
+                Gson gson = new Gson();
+                HomePageBean bean = gson.fromJson(value, new TypeToken<HomePageBean>() {
+                }.getType());
+                
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                
+            }
+        });
+    }
+	
+	
+	=================GET请求联网配合Gson转换工厂（添加请求参数）==========================
+	
+	获取的数据就是以Gson解析的内容
+	
+	currentCityId=cityId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiManager.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        HomePageInterface homePage = retrofit.create(HomePageInterface.class);
+        Call<BannerBean> call = homePage.getBannerBean(cityId);
+        call.enqueue(new Callback<BannerBean>() {
+            @Override
+            public void onResponse(Call<BannerBean> call, Response<BannerBean> response) {
+                //下载成功
+                //得到BannerBean，得到List<DataEntity>
+                //解析List，分别得到图片的url集合,标题的集合
+                BannerBean bean = response.body();
+              
+
+            @Override
+            public void onFailure(Call<BannerBean> call, Throwable t) {
+
+            }
+        });
+	
+	
+	
+7.沉浸模式
+
+
+//设置沉浸模式---setContextView之前设置
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        }
+	
+
+	
+//没有actionbar的设置沉浸模式
+setContextView之后设置
+
+//设置沉浸模式后，给自己布局的标题栏titlelayout的属性重新布局调整
+    private boolean flag=true;//设置标记，避免重走该生命周期方法，重复设置。
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(flag) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                RelativeLayout rl = (RelativeLayout) findViewById(R.id.title_layout);
+                int statusHeight = getStatusHeight(this);	//getStatusHeight方法在下面
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rl.getLayoutParams();
+                params.height += statusHeight;
+                rl.setLayoutParams(params);
+                rl.setPadding(0, statusHeight, 0, statusHeight);
+            }
+            flag=false;
+        }
+
+    }
+	
+	
+//有actionbar的设置沉浸模式---直接在onCreate写即可
+
+ boolean isKitKat;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //设置沉浸模式（在setContentView之前）
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            isKitKat=true;
+        }
+
+
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle("haha");
+        setSupportActionBar(toolbar);
+        if(isKitKat){
+            int statusH = getStatusHeight(this);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) toolbar.getLayoutParams();
+            params.height +=statusH;
+            toolbar.setLayoutParams(params);
+            toolbar.setPadding(0,statusH,0,0);
+
+        }
+
+    }
+	
+	
+	    /**
+     * 获得状态栏的高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusHeight(Context context) {
+
+        int statusHeight = -1;
+        try {
+            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
+            Object object = clazz.newInstance();
+            int height = Integer.parseInt(clazz.getField("status_bar_height")
+                    .get(object).toString());
+            statusHeight = context.getResources().getDimensionPixelSize(height);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return statusHeight;
+    }
+	
+	
+	
+8.避免多余用户的搜索或误操作导致的搜索，提高app性能
+
+结合第2点，延时操作。
+
+//延迟搜索的Handler
+    Handler handler = new Handler();
+    //搜索的Runnable
+    Runnable searchRunable = new Runnable() {
+        @Override
+        public void run() {
+            //执行搜索的代码or方法
+            ·····
+        }
+    };
+	
+	某处需要调用执行搜索的地方
+	//清掉前面的搜索
+    handler.removeCallbacks(searchRunable);
+    //延迟搜索    
+	handler.postDelayed(searchRunable,500);
+	
+	
+9.底部导航 FragmentTabHost+Fragment的结合
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--放各模块Fragment的容器-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/fragmentLayout"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E1E1E3"/>
+
+		布局固定写法 
+注意:id均是android的系统id
+    <!--底部导航-->
+    <android.support.v4.app.FragmentTabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0"
+            android:id="@android:id/tabcontent"
+            />
+
+    </android.support.v4.app.FragmentTabHost>
+
+</LinearLayout>
+
+
+	
+	
+
+
+
+/**
+ * Created by Administrator on 2016/11/21 0021.
+ */
+public class MainActivity extends NoActionBarActivity {
+
+    //声明底部导航的文字数组
+    private String[] tabTexts = {
+            "首页",
+            "发现",
+            "消息",
+            "我的"
+    };
+
+    //声明底部导航的图片id数组
+    private int[] imgId = {
+            R.drawable.tab_home_selector,
+            R.drawable.tab_discover_selector,
+            R.drawable.tab_message_selector,
+            R.drawable.tab_mine_selector,
+    };
+
+    //TabHost使用的Fragment类数组
+    private Class[] fragments = {
+            HomeFragment.class, DiscoverFragment.class, MessageFragment.class, MineFragment.class
+    };
+
+    //控件的声明
+    private FragmentTabHost tabHost;
+
+    LayoutInflater inflater;
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        
+        //初始化控件
+        setupView();
+    }
+
+    private void setupView() {
+        tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        //设置tabHost
+        /*
+        * 参数1：context
+        *
+        * 参数2：FragmentManager
+        *
+        * 参数3：要显示的Fragment的容器id
+        *
+        * */
+        tabHost.setup(this,getSupportFragmentManager(),R.id.fragmentLayout);
+
+        //初始化inflater
+        inflater = LayoutInflater.from(this);
+
+        //给tabHost添加Tab
+        for(int i=0;i<tabTexts.length;i++){
+            //创建新的Tab  参数作用：可通过该参数找到tabItem
+            TabHost.TabSpec tabItem = tabHost.newTabSpec(i + "");
+            //给tabItem设置内容view
+            tabItem.setIndicator(getTabItemView(i));
+            //tabItem添加到tabHost中
+            /*
+            * 参数1：tab标签
+            *
+            * 参数2：tab内容的Fragment类
+            *
+            * 参数3：Bundle    可以传值到Fragment
+            *
+            * */
+            tabHost.addTab(tabItem,fragments[i],null);
+            //tabHost去边线
+            tabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
+        }
+    }
+
+
+
+    /**
+     * 加载底部导航的四个Tab
+     *
+     * @param index
+     * @return
+     */
+    private View getTabItemView(int index){
+
+
+        View view = inflater.inflate(R.layout.tab_item_layout,null);
+        //找到控件
+        ImageView iv = (ImageView) view.findViewById(R.id.tab_img);
+        TextView tv = (TextView) view.findViewById(R.id.tab_tv);
+        //给控件设置相应内容
+        iv.setImageResource(imgId[index]);
+        tv.setText(tabTexts[index]);
+
+        return  view;
+    }
+
+
+    //按两次backspace退出应用
+
+    private long exitTime=0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK&&event.getAction()==KeyEvent.ACTION_DOWN){
+                if(System.currentTimeMillis()-exitTime>2000){
+                    Toast.makeText(this,"再点击一次退出",Toast.LENGTH_SHORT).show();
+                    exitTime=System.currentTimeMillis();
+                }else{
+                    finish();
+                    //正常退出--0
+                    System.exit(0);
+                }
+            //return true 该事件自己处理，不向外分发该事件
+        return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+}
+
+
+10.webView控件的学习
+
+public class DiscoverFragment extends Fragment {
+
+
+    
+    WebView webView;
+
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.discover_fragment,container,false);
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupView(view);
+    }
+
+    private void setupView(View view) {
+        webView = (WebView) view.findViewById(R.id.discover_webView);
+        
+		//支持js
+        webView.getSettings().setJavaScriptEnabled(true);
+		//WebChromeClient
+        webView.setWebChromeClient(new WebChromeClient(){
+		//进度
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+              
+            }
+        });
+		
+		//WebViewClient
+        webView.setWebViewClient(new WebViewClient(){
+		//开始
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                
+            }
+
+		//结束
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+               
+            }
+            /**
+             * 当webview中的超链接(重定向)被点击时，回调该方法
+             *
+             * @param view
+             * @param url
+             * @return 返回值：表示这个点击事件是否继续给webview,true表示完全自己处理，false表示交给webview处理
+             */
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			//例如：
+                //启动一个WebViewActivity,并传入url
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra(IntentUtils.KEY_DISCOVERURL,url);
+                startActivity(intent);
+                //返回true 自己处理
+                return true;
+            }
+        });
+
+        //加载网页
+        webView.loadUrl(xxx);
+    }
+	
+	//点击backspace可返回上个页面，而不是退出(若webview只加载了一个页面)
+	 @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 按返回时，看网页是否能返回
+            if (webView.canGoBack()) {
+                webView.goBack();
+				//返回true webview自己处理
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+}
+
+11.不写res-anim 或在java写animation的进度动画，需要配合有带进度参数的方法。
+
+在res-anim写帧动画，复制黏贴~~~~够呛。
+在java写也呛。
+
+首先，图片命名末尾的有序的数字，必须数字。----好处：在R文件生成的资源id是连续。
+
+例如：refresh_001----到-----refresh_048 共48张图片
+
+public class DiscoverFragment extends Fragment {
+
+
+    ImageView img;
+    WebView webView;
+
+
+    int startId=R.drawable.waiting_001;
+
+    int endId =R.drawable.waiting_065;
+
+    int imgCount = endId-startId;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.discover_fragment,container,false);
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupView(view);
+    }
+
+    private void setupView(View view) {
+        webView = (WebView) view.findViewById(R.id.discover_webView);
+        img = (ImageView) view.findViewById(R.id.discover_img);
+
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                int per =0;
+
+                if(newProgress<100){
+                    per = (int) (newProgress/(100f/imgCount));
+                }else{
+                    per =imgCount;
+                }
+
+                img.setImageResource(startId+per);
+
+            }
+        });
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                webView.setVisibility(View.GONE);
+                img.setVisibility(View.VISIBLE);
+
+
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                img.setVisibility(View.GONE);
+                webView.setVisibility(View.VISIBLE);
+
+            }
+       
+        });
+
+        //加载数据
+        webView.loadUrl(ApiManager.DISCOVER_URL);
+    }
+}
+
+
+
+
+
+
+12.自定义刷新头部
+
+
+
+12.1继承Layout实现PtrUIHandler接口，并按需求重写相应的方法
+
+/**
+ * 自定义刷新头
+ */
+public class PullToRefreshHeadView extends FrameLayout implements PtrUIHandler{
+
+    //用来显示刷新动画及图片的ImageView
+    ImageView img;
+
+    /**
+     * 下拉图片开始id
+     */
+    int startId=R.drawable.refresh_001;
+    /**
+     * 下拉图片的最后一张id
+     */
+    int endId = R.drawable.refresh_048;
+    /**
+     * 图片的总数
+     */
+    int imgCount = endId-startId;
+
+    public PullToRefreshHeadView(Context context) {
+        super(context);
+        init();
+    }
+
+    public PullToRefreshHeadView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+
+    private void init(){
+        //初始化ImageView
+        img = new ImageView(getContext());
+        //img拉伸属性
+        img.setScaleType(ImageView.ScaleType.FIT_XY);
+        //创建ImageView的布局属性
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //居中
+        params.gravity = Gravity.CENTER;
+        //margin属性
+        params.setMargins(50,50,50,50);
+        //把ImageView添加到布局中
+        addView(img,params);
+        //设置默认图片
+        img.setImageResource(endId);
+    }
+
+
+    /**
+     * Content 重新回到顶部， Header 消失，整个下拉刷新过程完全结束以后，重置 View
+     *
+     * @param frame
+     */
+    @Override
+    public void onUIReset(PtrFrameLayout frame) {
+//        LogPrint.print("onUIReset");
+
+    }
+
+    /**
+     * 准备刷新，Header 将要出现时调用。
+     *
+     * @param frame
+     */
+    @Override
+    public void onUIRefreshPrepare(PtrFrameLayout frame) {
+//        LogPrint.print("onUIRefreshPrepare");
+    }
+
+
+    /**
+     * 开始刷新，Header 进入刷新状态之前调用。
+     */
+    @Override
+    public void onUIRefreshBegin(PtrFrameLayout frame) {
+//        LogPrint.print("onUIRefreshBegin");
+        //改变图片
+        img.setImageResource(R.drawable.icon_black_progressbar);
+        //旋转补间动画
+        RotateAnimation animation = new RotateAnimation(0,360,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        animation.setDuration(1000);
+        //设置重复次数
+        animation.setRepeatCount(Animation.INFINITE);
+        //设置插值器--线性匀速
+        animation.setInterpolator(new LinearInterpolator());
+        //设置动画
+        img.startAnimation(animation);
+    }
+
+    /**
+     * 刷新结束，Header 开始向上移动之前调用。
+     */
+    @Override
+    public void onUIRefreshComplete(PtrFrameLayout frame) {
+        LogPrint.print("onUIRefreshComplete");
+        //清掉动画
+        img.clearAnimation();
+        //设置图片
+//        img.setImageResource(endId);
+    }
+
+    /**
+     * 刷新头部位置变化回调
+     * ptrIndicator.getCurrentPercent()	可获取当前UI位置改变的百分比
+     *
+     * @param frame
+     * @param isUnderTouch 手指是否按下
+     * @param status       状态
+     * @param ptrIndicator UI变化指示器
+     */
+    @Override
+    public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
+        LogPrint.print("onUIPositionChange");
+
+        //如果当前状态是刷新状态，就不执行当前代码，执行onUIRefreshBegin方法
+        if(status ==PtrFrameLayout.PTR_STATUS_LOADING){
+            //当前是刷新状态，不改图片（加载onUIRefreshBegin方法里的图片）
+            return;
+        }
+
+
+        //根据百分比，计算加载图片的索引
+        int per=0;
+        //
+        if(ptrIndicator.getCurrentPercent()<=1) {
+             per = (int) (ptrIndicator.getCurrentPercent() * imgCount);
+
+        }else{
+            //如果到达100%或100%以上，图片就固定在最后一张
+            per =imgCount;
+        }
+        //刷新完成，就显示最后一个。
+        if(status==PtrFrameLayout.PTR_STATUS_COMPLETE){
+                per=imgCount;
+        }
+
+        img.setImageResource(startId+per);
+    }
+}
+
+--------------------------
+12.2设置刷新头
+
+
+<in.srain.cube.views.ptr.PtrFrameLayout xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="1000"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_resistance="1.7">
+		
+		
+ private void setupRefreshView(View view) {
+        refresh = (PtrFrameLayout) view.findViewById(R.id.refresh);
+
+        //UI=================
+        //创建刷新头控件
+        PullToRefreshHeadView pullHead = new PullToRefreshHeadView(getContext());
+        //添加刷新头
+        refresh.setHeaderView(pullHead);
+        //添加刷新头控制
+        refresh.addPtrUIHandler(pullHead);
+        //功能===============
+        //设置刷新事件
+        refresh.setPtrHandler(new PtrDefaultHandler() {
+            //刷新方法
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                //联网获取数据--listview
+                getData();
+                //广告获取数据
+                banner.setCityId(cityId);
+            }
+
+            //解决Listview与下拉刷新的冲突
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return super.checkCanDoRefresh(frame, lv, header);
+            }
+        });
+    }
+	
+	
+	
+14.Fragment切换问题
+
+fragment切换时，重走onDestroyView oncreateView onViewCreate
+所以，控件数据记录的内容会重置原来样式，所以按需求进行必要保存恢复。
+
+
+15.Stickylistheaders的适配器
+
+
+ <!--头部悬停控件listview-->
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+/**
+ * 
+ * Stickylistheaders的适配器
+ * 继承BaseAdapter,实现StickyListHeadersAdapter
+ */
+public class CityChoiceAdapter extends BaseAdapter implements StickyListHeadersAdapter{
+    //Stickylistheaders要展示城市数据
+    List<CityBean> data;
+    //全部城市数据
+    List<CityBean> allData;
+    LayoutInflater inflater;
+
+
+    public CityChoiceAdapter(Context context,List<CityBean> data) {
+        this.data = data;
+        inflater=LayoutInflater.from(context);
+        //====================
+        allData = new ArrayList<>();
+        allData.addAll(data);
+    }
+
+    //向外提供方法，设置allData的数据
+    public void setAllData(List<CityBean> data){
+        allData.clear();
+        allData.addAll(data);
+
+    }
+
+    //======================Stick....
+    @Override
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+
+        HeadViewHolder viewHolder = null;
+        if(convertView==null){
+            convertView = inflater.inflate(R.layout.city_head_item,parent,false);
+            viewHolder = new HeadViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (HeadViewHolder) convertView.getTag();
+        }
+        //绑定数据
+        viewHolder.tv_head.setText(data.get(position).getLetter());
+
+        return convertView;
+    }
+
+    /*返回头部分类id*/
+    @Override
+    public long getHeaderId(int position) {
+        return data.get(position).getLetterId();
+    }
+
+
+    class HeadViewHolder{
+        TextView tv_head;
+
+        public HeadViewHolder(View view) {
+            tv_head = (TextView) view.findViewById(R.id.city_head);
+        }
+    }
+
+
+
+    //==================listview的adapter
+
+    @Override
+    public int getCount() {
+        return data.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return data.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        BeanViewHolder viewHolder =null;
+        if(convertView ==null){
+            convertView = inflater.inflate(R.layout.city_item_layout,parent,false);
+            viewHolder = new BeanViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (BeanViewHolder) convertView.getTag();
+        }
+        //绑定数据
+        viewHolder.tv_cityname.setText(data.get(position).getCityname());
+
+        return convertView;
+    }
+
+
+    class BeanViewHolder{
+        TextView tv_cityname;
+
+        public BeanViewHolder(View view) {
+            tv_cityname = (TextView) view.findViewById(R.id.city_name);
+
+        }
+    }
+
+
+
+}
+
+
+16.城市中文、拼音、拼音首字母检索
+
+思路：
+//搜索逻辑代码
+            //if else if顺序不能乱
+            for (CityBean city : allData) {
+                //(中文搜索)如果城市名中，包含有搜索的字符串，表示检索到了
+                if (···) {
+                    data.add(city);
+                    //拼音首字母搜索
+                }else if(···){
+                    data.add(city);
+                    //单个拼音字完全匹配搜索
+                }else if(···){
+                    data.add(city);
+                    //完全匹配搜索
+                }else if(···){
+                    data.add(city);
+                }
+				
+
+17.万能adapter
+
+/**
+ * 自定义抽象万能 BaseAdapter
+ * 可传入任意数据源、布局
+ */
+public abstract class AbstractBaseAdapter<T> extends BaseAdapter{
+    //数据源
+    List<T> data;
+    //LayoutInflater
+    LayoutInflater inflater;
+    //布局资源
+    int[] layoutId;
+
+    //构造方法
+    public AbstractBaseAdapter(Context context,  List<T> data ,int ...layoutId) {
+        this.layoutId = layoutId;
+        this.data = data;
+        inflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public int getCount() {
+        return data.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return data.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    //重写getViewTypeCount(因为可能传入的布局有多个)
+    //返回Listview布局种类个数，即布局资源id数组的长度
+    @Override
+    public int getViewTypeCount() {
+        return layoutId.length;
+    }
+
+    //抽象绑定数据的方法
+    public abstract void bindData(int position, ViewHolder holder);
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = null;
+        //得到当前数据布局类型
+        int layoutType = getItemViewType(position);
+        if (convertView == null) {
+            //根据类型加载不同的布局
+            convertView = inflater.inflate(layoutId[layoutType], parent, false);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        //绑定数据
+        bindData(position, holder);
+
+
+        return convertView;
+    }
+
+    public static class ViewHolder {
+        //保存的控件：是需要设置值的控件
+        private View view;
+
+        public ViewHolder(View view) {
+            this.view = view;
+        }
+
+
+        //向子类提供一个方法，返回需要设置值的控件
+        public View findViewById(int viewId) {
+            //根据viewid，找到对应的控件
+            return view.findViewById(viewId);
+        }
+
+    }
+
+}
+
+
+继承万能adapter的子类，只需实现binData方法，通过holder.findViewById找到控件，最后设置相应内容即可。
+若listview加载是多个布局，只需再重写BaseAdapter的getItemViewType方法。所以adapter也要通过getItemViewType方法判断加载对应的布局
+
+
+ private void initData() {
+       
+       AbstractBaseAdapter adapter = new AbstractBaseAdapter<HomePageBean.DataEntity>(getActivity(), data, R.layout.home_listview_content, R.layout.home_listview_content2) {
+            //绑定数据
+            @Override
+            public void bindData(int position, ViewHolder holder) {
+                HomePageBean.DataEntity entity = data.get(position);
+                //得到接口返回的数据类型，就可确认布局类型，根据不同布局，加载不同数据
+                int type = Integer.valueOf(data.get(position).getType());
+                if (type == 0) {
+                    //图片
+                    ImageView iv = (ImageView) holder.findViewById(R.id.home_listview_img);
+                    Glide.with(HomeFragment.this).load(entity.getGroupthumbnail()).into(iv);
+                    //标题
+                    TextView tv_title = (TextView) holder.findViewById(R.id.home_listview_title);
+                    tv_title.setText(entity.getTitle());
+                    //内容
+                    TextView tv_content = (TextView) holder.findViewById(R.id.home_listview_summary);
+                    tv_content.setText(entity.getSummary());
+                } else {
+                    //图片
+                    ImageView iv = (ImageView) holder.findViewById(R.id.home_listview_img);
+                    Glide.with(HomeFragment.this).load(entity.getGroupthumbnail()).into(iv);
+                    //标题
+                    TextView tv_title = (TextView) holder.findViewById(R.id.home_listview_title);
+                    tv_title.setText(entity.getTitle());
+                }
+            }
+
+            //重写itemViewType方法
+            @Override
+            public int getItemViewType(int position) {
+                //得到数据
+                HomePageBean.DataEntity entity = data.get(position);
+                //得到接口数据里的类型参数（0或1）
+                String type = entity.getType();
+                //把字符串转换成int，再返回
+                return Integer.valueOf(type);
+            }
+
+            //用adapter设置listview的item能否点击 不包含listview头部
+//            @Override
+//            public boolean isEnabled(int position) {
+//                return super.isEnabled(position);
+//            }
+        };
+
+
+    }
+	
+	
+18.自定义广告轮播View
+
+home_banner_layout.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--因为要绑定到某个自定义view
+    高度要给定,写match_parent/wrap_content都显示不了广告-->
+    <com.youth.banner.Banner
+        android:id="@+id/home_banner"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+</LinearLayout>
+
+
+/**
+ * 架包：https://github.com/youth5201314/banner
+ *
+ * 自定义Banner控件(该自定义控件若要绑定view，需要继承ViewGroup或其子类)
+ * <p/>
+ * 实现自动轮播效果
+ * <p/>
+ * 提供设置城市id的方法，只要设置城市id，就能自动获取数据，得到图片，进行轮播
+ */
+public class BannerView extends FrameLayout{
+
+    Banner banner;
+
+    public BannerView(Context context) {
+        super(context);
+        init();
+    }
+
+    public BannerView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    private void init(){
+        //加载布局  参数3：true 与本自定义view绑定在一起
+        LayoutInflater.from(getContext()).inflate(R.layout.home_banner_layout, this,true);
+        //初始化控件
+        banner = (Banner)findViewById(R.id.home_banner);
+        //设置banner风格
+        //设置banner样式
+        banner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);
+        //设置图片加载器
+        banner.setImageLoader(new GlideImageLoader());
+        //设置图片集合
+//        banner.setImages(images);
+        //设置banner动画效果
+        banner.setBannerAnimation(Transformer.FlipHorizontal);
+        //设置标题集合（当banner样式有显示title时）
+//        banner.setBannerTitles(Arrays.asList(titles));
+        //设置自动轮播，默认为true
+        banner.isAutoPlay(true);
+        //设置轮播时间
+        banner.setDelayTime(2000);
+        //设置指示器位置（当banner模式中有指示器时）
+        banner.setIndicatorGravity(BannerConfig.CENTER);
+
+
+    }
+
+
+    class GlideImageLoader extends ImageLoader{
+
+        @Override
+        public void displayImage(Context context, Object path, ImageView imageView) {
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            //把path转换成ImageView
+            Glide.with(getContext()).load(path).into(imageView);
+        }
+    }
+
+
+    private String currentCityId;
+
+    //提供设置城市id的方法（通过该id联网下载）
+    public void setCityId(String cityId){
+        //cityId一样不需再更新
+
+//        if(cityId.equals(currentCityId)){
+//            return;
+//        }
+
+        currentCityId=cityId;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiManager.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        HomePageInterface homePage = retrofit.create(HomePageInterface.class);
+        Call<BannerBean> call = homePage.getBannerBean(cityId);
+        call.enqueue(new Callback<BannerBean>() {
+            @Override
+            public void onResponse(Call<BannerBean> call, Response<BannerBean> response) {
+                //下载成功
+                //得到BannerBean，得到List<DataEntity>
+                //解析List，分别得到图片的url集合,标题的集合
+                BannerBean bean = response.body();
+                List<BannerBean.DataEntity> data = bean.getData();
+
+                List<String> imgUrls = new ArrayList<String>();
+                List<String> titles = new ArrayList<String>();
+
+                for(BannerBean.DataEntity entity :data){
+                    imgUrls.add(entity.getPicurl());
+                    titles.add(entity.getTitle());
+                }
+
+                //设置banner的图片集合及标题集合
+                banner.setImages(imgUrls);
+                banner.setBannerTitles(titles);
+                //banner配置完成，开始轮播
+                banner.start();
+
+            }
+
+            @Override
+            public void onFailure(Call<BannerBean> call, Throwable t) {
+
+            }
+        });
+
+    }
+}
+
+19.surfaceView、Camera初步学习
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+		
+</LinearLayout>
+
+public class MyCaptureActivity extends NoActionBarActivity implements SurfaceHolder.Callback {
+
+    //界面显示
+    SurfaceView surfaceView;
+    //相机
+    Camera camera;
+    //界面控制器
+    SurfaceHolder surfaceHolder;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_capture);
+        //初始化控件
+        setupView();
+    }
+
+    private void setupView() {
+        surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        //取出surfaceView内部的SurfaceHolder
+        surfaceHolder = surfaceView.getHolder();
+        //设置surfaceHolder的回调接口
+        surfaceHolder.addCallback(this);
+    }
+
+    /** 当surfaceView创建完成后，回调
+     * 一般在这个方法中进行绘图工作的初始化，并开始绘制
+     * @param holder
+     */
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        //1.创建camera对象(open里写参数，默认打开后置)
+        camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        //2.设置相关属性
+        Camera.Parameters params = camera.getParameters();
+        params.setPreviewSize(480, 320);
+        camera.setParameters(params);
+        try {
+            //3.把相机的数据与surfaceview关联
+            camera.setPreviewDisplay(surfaceHolder);
+            //4.开启预览
+            camera.startPreview();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    /**当surfaceView销毁时回调
+    一般在这个方法中进行回收工作
+     */
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        if(camera!=null){
+            camera.stopPreview();
+            camera.release();
+            camera =null;
+        }
+    }
+}
+
+
+
+20.二维码框架使用cn.yipianfengye.android:zxing-library:2.1
+
+首先声明权限：（扫码成功会手机振动）
+<uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+方式一：啥都不用干，直接用
+//跳转到扫描二维码界面（框架自带的CaptureActivity）
+Intent intent = new Intent(getActivity(), CaptureActivity.class);
+startActivityForResult(intent,INTENT_REQUEST_SCAN);
+
+
+
+ @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+                //扫码返回结果
+                if(data !=null){
+                    //取出data中bundle
+                    Bundle bundle = data.getExtras();
+                    if(bundle!=null){
+                        //取出结果
+                        String value = bundle.getString(CodeUtils.RESULT_STRING);
+                        Toast.makeText(getActivity(), "扫码结果："+value, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+    }
+	
+	
+	
+方式二：自定义扫二维码界面
+
+扫码Activity.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--标题栏-->
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_height"
+        android:background="#19ACCA">
+
+        <TextView
+            style="@style/title_text_style"
+            android:text="扫一扫" />
+
+        <Button
+            android:layout_margin="5dp"
+            android:onClick="cancelScan"
+            android:id="@+id/scan_cancel"
+            style="@style/title_button_style"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="#5EC5DA"
+            android:gravity="center"
+            android:text="取消" />
+    </RelativeLayout>
+
+    <!--加载扫描Fragment的容器-->
+    <FrameLayout
+        android:id="@+id/captureLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+
+
+    <!--<SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />-->
+
+
+</LinearLayout>
+
+扫码fragment布局
+
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <!--2个控件的id均固定(均是框架定义的id)，其他属性值自己改，达到自定义效果-->
+    <SurfaceView
+        android:id="@+id/preview_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.uuzuche.lib_zxing.view.ViewfinderView
+        android:id="@+id/viewfinder_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:inner_corner_color="#19ACCA"
+        app:inner_corner_length="30dp"
+        app:inner_corner_width="2dp"
+        app:inner_height="200dp"
+        app:inner_margintop="150dp"
+        app:inner_scan_bitmap="@drawable/line"
+        app:inner_scan_iscircle="false"
+        app:inner_scan_speed="15"
+        app:inner_width="200dp" />
+
+    <TextView
+        android:textColor="#fff"
+        android:layout_marginBottom="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:text="将二维码放置于取景范围内，即可自动扫描" />
+
+</FrameLayout>
+
+
+
+
+
+public class MyCaptureActivity extends NoActionBarActivity implements CodeUtils.AnalyzeCallback {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_capture);
+        //创建CaptureFragment(框架自带的Fragment类)
+        CaptureFragment cf = new CaptureFragment();
+        //设置CaptureFragment的布局
+        CodeUtils.setFragmentArgs(cf,R.layout.capture_fragment);
+        //设置解析回调接口
+        cf.setAnalyzeCallback(this);
+        //把captrueFragmetn添加到Activity中
+        getSupportFragmentManager().beginTransaction().replace(R.id.captureLayout, cf).commit();
+
+    }
+
+    //扫码成功，回调
+    @Override
+    public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+        //先获取Intent
+        Intent intent = getIntent();
+        //设置结果值
+        Bundle bundle = new Bundle();
+        bundle.putString(CodeUtils.RESULT_STRING,result);
+        intent.putExtras(bundle);
+        //setResult
+        setResult(1,intent);
+        //finish
+        finish();
+
+
+    }
+
+    //扫码失败回调
+    @Override
+    public void onAnalyzeFailed() {
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+        bundle.putString(CodeUtils.RESULT_STRING,"扫码失败");
+        intent.putExtras(bundle);
+        setResult(0,intent);
+        finish();
+    }
+
+    //点击取消按钮，结束该Activity
+    public void cancelScan(View view){
+        finish();
+    }
+}
+
+
+相应的
+//跳转到扫描二维码界面
+                Intent intent = new Intent(getActivity(), MyCaptureActivity.class);
+                startActivityForResult(intent,INTENT_REQUEST_SCAN);
+
+
+
+		
+
+
