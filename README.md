@@ -18,22 +18,23 @@ RealMoMo
 
 ###预览界面
 
- ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/1.png)
- 进入界面
+<br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/1.png)</br>
+ <br>进入界面</br>
  
-  ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/2.png)
-  首次进入app的引导界面
+ <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/2.png)</br>
+ <br> 首次进入app的引导界面</br>
   
-   ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/3.png)
-   x城市选择界面
+  <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/3.png)</br>
+  <br> 城市选择界面</br>
    
-    ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/4.png)
-    主界面
+  <br>  ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/4.png)</br>
+   <br> 主界面</br>
     
-     ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/5.png)
+   <br>  ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/5.png)</br>
+   <br>  其他界面</br>
      
-     ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/5.png)
-      其他界面
+    <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/6.png)</br>
+    <br>  其他界面</br>
 
 ###开发环境
 Android Studio2.0
