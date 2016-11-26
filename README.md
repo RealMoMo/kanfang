@@ -35,7 +35,7 @@ RealMoMo
      ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/5.png)
       其他界面
 
-###f开发环境
+###开发环境
 Android Studio2.0
 
 
