@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <!--2个控件的id均固定(均是框架定义的id)-->
+    <SurfaceView
+        android:id="@+id/preview_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.uuzuche.lib_zxing.view.ViewfinderView
+        android:id="@+id/viewfinder_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:inner_corner_color="#19ACCA"
+        app:inner_corner_length="30dp"
+        app:inner_corner_width="2dp"
+        app:inner_height="200dp"
+        app:inner_margintop="150dp"
+        app:inner_scan_bitmap="@drawable/line"
+        app:inner_scan_iscircle="false"
+        app:inner_scan_speed="15"
+        app:inner_width="200dp" />
+
+    <TextView
+        android:textColor="#fff"
+        android:layout_marginBottom="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:text="将二维码放置于取景范围内，即可自动扫描" />
+
+</FrameLayout>

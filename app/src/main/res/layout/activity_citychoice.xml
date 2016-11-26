@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--标题栏-->
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_height"
+        android:background="#19ACCA">
+
+        <TextView
+            style="@style/title_text_style"
+            android:text="选择城市" />
+
+        <Button
+            android:id="@+id/city_choice_cancel"
+            style="@style/title_button_style"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="#5EC5DA"
+            android:gravity="center"
+            android:text="取消" />
+    </RelativeLayout>
+
+    <!--搜索-->
+    <!--android:focusable="true"
+        android:focusableInTouchMode="true"
+        解决edittext焦点问题-->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#F5F8FC"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:textSize="@dimen/search_edittext_text_size"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:textColorHint="#C5C5C5"
+            android:drawableLeft="@drawable/icon_search"
+            android:layout_margin="10dp"
+            android:background="@drawable/edittext_shape"
+            android:hint="中文/拼音/首字母"
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--头部悬停控件listview-->
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!--右边a-z的侧滑view-->
+        <momo.com.week7.widget.SlidView
+            android:id="@+id/slideView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:padding="10dp" />
+
+        <!--显示右边view内容的放大控件view-->
+        <momo.com.week7.widget.SlideLetterView
+            android:id="@+id/letterView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</LinearLayout>

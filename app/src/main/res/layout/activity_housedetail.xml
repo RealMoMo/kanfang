@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--标题栏-->
+    <RelativeLayout
+        android:id="@+id/housedetail_titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_height"
+        android:background="#19ACCA">
+
+        <ImageButton
+            android:id="@+id/btn_housedetail_backtoMain"
+            android:src="@drawable/arrow_left"
+            android:onClick="back"
+            android:background="@null"
+            style="@style/title_button_style"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            style="@style/title_text_style"
+            android:text="房产资讯" />
+
+        <ImageButton
+            android:background="@null"
+            android:id="@+id/btn_housedetail_cancel"
+            android:src="@drawable/btn_share"
+            style="@style/title_button_style"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <momo.com.week7.widget.HouseDetailView
+            android:layout_margin="10dp"
+            android:id="@+id/houseView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:weightSum="5"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#E7EBF1">
+
+    <EditText
+        android:paddingLeft="10dp"
+        android:layout_margin="10dp"
+        android:background="#fff"
+        android:textSize="12sp"
+        android:textColorHint="#D6D6D6"
+        android:drawableLeft="@drawable/icon_post_comment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:hint="发表评论"/>
+
+        <ImageView
+            android:scaleType="center"
+            android:background="#F2F5FA"
+            android:layout_margin="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_comment"/>
+
+        </LinearLayout>
+
+</LinearLayout>

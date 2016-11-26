@@ -1,0 +1,69 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!--标题文本框风格样式-->
+    <style name="title_text_style">
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textColor">@color/title_text_color</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!--标题按钮风格样式-->
+    <style name="title_button_style">
+        <item name="android:textSize">@dimen/title_button_size</item>
+        <item name="android:textColor">@color/title_text_color</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="home_secondhead_textview_style">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="message_title_style">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="message_imageview_style">
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="message_content_style">
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textColor">#878787</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="message_line_style">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">#E2E2E3</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+
+</resources>

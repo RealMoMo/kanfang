@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--标题栏-->
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_height"
+        android:background="#19ACCA">
+
+        <TextView
+            style="@style/title_text_style"
+            android:text="扫一扫" />
+
+        <Button
+            android:layout_margin="5dp"
+            android:onClick="cancelScan"
+            android:id="@+id/scan_cancel"
+            style="@style/title_button_style"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="#5EC5DA"
+            android:gravity="center"
+            android:text="取消" />
+    </RelativeLayout>
+
+    <!--加载扫描Fragment的容器-->
+    <FrameLayout
+        android:id="@+id/captureLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+
+    <!--
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    -->
+
+</LinearLayout>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="7">
+
+    <TextView
+        android:background="#19ACCA"
+        android:textSize="@dimen/title_text_size"
+        android:textColor="@color/title_text_color"
+        android:gravity="center"
+        android:layout_height="@dimen/head_height"
+        android:layout_width="match_parent"
+        android:text="消息" />
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:weightSum="5">
+
+        <ImageView
+            android:src="@drawable/ic_xinfang"
+            style="@style/message_imageview_style" />
+
+        <LinearLayout
+
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="热点资讯"
+                style="@style/message_title_style" />
+
+            <TextView
+                android:text="每天最新热点资讯推荐"
+                style="@style/message_content_style" />
+
+            <View style="@style/message_line_style" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:weightSum="5">
+
+        <ImageView
+            android:src="@drawable/ic_kaipan"
+            style="@style/message_imageview_style" />
+
+        <LinearLayout
+
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="楼盘动态消息"
+                style="@style/message_title_style" />
+
+            <TextView
+                android:text="报名团购,实时获取最新动态"
+                style="@style/message_content_style" />
+
+            <View style="@style/message_line_style" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:weightSum="5">
+
+        <ImageView
+            android:src="@drawable/ic_youhui"
+            style="@style/message_imageview_style" />
+
+        <LinearLayout
+
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="线路报名消息"
+                style="@style/message_title_style" />
+
+            <TextView
+                android:text="报名看房团,免费接送,礼品丰厚"
+                style="@style/message_content_style" />
+
+            <View style="@style/message_line_style" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

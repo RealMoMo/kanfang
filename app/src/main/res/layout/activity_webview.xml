@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--标题栏-->
+    <RelativeLayout
+        android:id="@+id/webView_titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_height"
+        android:background="#19ACCA">
+
+        <ImageButton
+            android:id="@+id/btn_viewView_back"
+            android:src="@drawable/arrow_left"
+            android:onClick="back"
+            android:background="@null"
+           style="@style/title_button_style"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
+
+
+
+        <ImageButton
+            android:background="@null"
+            android:id="@+id/btn_webView_share"
+            android:src="@drawable/btn_share"
+            style="@style/title_button_style"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/webview_progressbar"
+            android:layout_gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"/>
+
+    </FrameLayout>
+
+
+
+
+
+</LinearLayout>

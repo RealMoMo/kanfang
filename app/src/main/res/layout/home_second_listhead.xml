@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_second_head"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="5dp"
+    >
+
+    <LinearLayout
+        android:onClick="true"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_xinfang"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/home_xinfang_secondhead"
+            android:text="新房" />
+
+        <TextView
+            android:id="@+id/tv_ershoufang"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/home_ershoufang_secondhead"
+            android:text="二手房" />
+
+        <TextView
+            android:id="@+id/tv_zufang"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/ic_zufang"
+            android:text="租房" />
+
+        <TextView
+            android:id="@+id/tv_zixun"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/home_zixun_secondhead"
+            android:text="资讯" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_dazhe"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/home_dazhe_secondhead"
+            android:text="打折优惠" />
+
+        <TextView
+            android:id="@+id/tv_kaipan"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/home_kaipan_secondhead"
+            android:text="最新开盘" />
+
+        <TextView
+            android:id="@+id/tv_fangdai"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/home_jisuan_secondhead"
+            android:text="房贷计算" />
+
+        <TextView
+            android:id="@+id/tv_gengduo"
+            style="@style/home_secondhead_textview_style"
+            android:drawableTop="@drawable/home_gengduo_secondhead"
+            android:text="更多" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#E1E1E3"
+        android:layout_height="5dp"/>
+
+</LinearLayout>
