@@ -93,4 +93,5 @@ Everyone who has contributed code and reported issues and pull requests!
 <br>因消息、我的界面要与QQ服务端进行交互，没有实现功能。</br>
 
 ###Version
-1.0----2016.11.26
+<br>1.0实现大致功能----2016.11.26</br>
+<br>1.1完善注释、精简代码----2016.11.27</br>
