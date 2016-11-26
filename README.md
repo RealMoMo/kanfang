@@ -31,10 +31,9 @@ RealMoMo
    <br> 主界面</br>
     
    <br>  ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/5.png)</br>
-   <br>  其他界面</br>
+   <br>  其他界面等等</br>
      
-    <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/6.png)</br>
-    <br>  其他界面</br>
+   
 
 ###开发环境
 Android Studio2.0
