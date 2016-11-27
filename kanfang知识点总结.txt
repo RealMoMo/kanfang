@@ -21,6 +21,8 @@
 //去掉状态栏(在setContextView之前设置)
 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+
+
 2.延时操作
 
 在Android开发中我们可能会有延时执行某个操作的需求，例如我们启动应用的时候，一开始呈现的是一个引导页面，过了两三秒后，会自动跳转到主界面。这就是一个延时操作。 
@@ -258,16 +260,7 @@ public interface HomePageInterface {
     @GET(ApiManager.HOUSE_DETAIL)
     Call<HouseDetailBean> getHouseDetailBean(@Query("newsid")String newsid);
 
-//    @GET(ApiManager.TEST)
-//    Call<String> getTest(@Query("pageflag")String pageflag,
-//                         @Query("buttonmore")String buttonmore,
-//                         @Query("cityid")String cityid);
-//
-//    @GET(ApiManager.TEST)
-//    Call<String> getTestMore(@Query("pageflag")String pageflag,
-//                         @Query("buttonmore")String buttonmore,
-//                         @Query("cityid")String cityid,
-//                             @Query("lastid")String lastid);
+
 }
 
 
@@ -341,8 +334,7 @@ public interface HomePageInterface {
 
         }
 	
-
-	
+7.1	
 //没有actionbar的设置沉浸模式
 setContextView之后设置
 
@@ -365,7 +357,8 @@ setContextView之后设置
 
     }
 	
-	
+
+7.2	
 //有actionbar的设置沉浸模式---直接在onCreate写即可
 
  boolean isKitKat;
@@ -397,7 +390,7 @@ setContextView之后设置
     }
 	
 	
-	    /**
+	 /**
      * 获得状态栏的高度
      *
      * @param context
@@ -434,6 +427,7 @@ setContextView之后设置
             ·····
         }
     };
+
 	
 	某处需要调用执行搜索的地方
 	//清掉前面的搜索
@@ -443,6 +437,9 @@ setContextView之后设置
 	
 	
 9.底部导航 FragmentTabHost+Fragment的结合
+
+
+9.1布局
 
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -484,9 +481,7 @@ setContextView之后设置
 
 	
 	
-
-
-
+9.2 java代码使用
 /**
  * Created by Administrator on 2016/11/21 0021.
  */
