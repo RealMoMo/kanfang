@@ -18,6 +18,12 @@ RealMoMo
 
 ###预览界面
 
+<br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/gif1.gif)</br>
+ <br>动态演示</br>
+ 
+ <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/gif2.gif)</br>
+ <br>动态演示</br>
+
 <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/1.png)</br>
  <br>进入界面</br>
  
