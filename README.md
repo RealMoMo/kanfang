@@ -1,13 +1,13 @@
 ##kanfang_demo
 
-仿QQ看房app---第七周学习Android路上
+仿QQ看房app
 
 ---
 关于作者：
 RealMoMo
 > 关于我，欢迎关注  
    微信：[Real_Mo]()  
-   邮箱：czb166@qq.com
+   邮箱：momo_weiye@126.com
 -------------
 ####开发目的: 
 <br>1.加深掌握android各组件</br>
@@ -17,6 +17,12 @@ RealMoMo
 <br>5.界面美化</br>
 
 ###预览界面
+
+<br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/gif1.gif)</br>
+ <br>动态演示</br>
+ 
+ <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/gif2.gif)</br>
+ <br>动态演示</br>
 
 <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/1.png)</br>
  <br>进入界面</br>
