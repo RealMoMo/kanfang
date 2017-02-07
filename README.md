@@ -11,10 +11,9 @@ RealMoMo
 -------------
 ####开发目的: 
 <br>1.加深掌握android各组件</br>
-<br>2.熟悉自定义view开发</br>
-<br>3.了解一些开源g框架Retrofit2、Glide、PullToRefresh等等</br>
-<br>4.学习抓包</br>
-<br>5.界面美化</br>
+<br>2.加深自定义view开发</br>
+<br>3.加深开源框架Retrofit2、Glide、PullToRefresh等使用</br>
+<br>4.练手抓包</br>
 
 ###预览界面
 
