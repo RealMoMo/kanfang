@@ -1,6 +1,6 @@
-##kanfang_demo
+## kanfang_demo
 
-仿QQ看房app
+仿QQ看房app (不再维护该项目)
 
 ---
 关于作者：
@@ -15,7 +15,7 @@ RealMoMo
 <br>3.加深开源框架Retrofit2、Glide、PullToRefresh等使用</br>
 <br>4.练手抓包</br>
 
-###预览界面
+### 预览界面
 
 <br> ![image](https://github.com/RealMoMo/kanfang/blob/master/project_picture/gif1.gif)</br>
  <br>动态演示</br>
@@ -40,7 +40,7 @@ RealMoMo
      
    
 
-###开发环境
+### 开发环境
 Android Studio2.0
 
 
@@ -88,15 +88,13 @@ dependencies {
   
 ```
 
-###Thanks
+### Thanks
 Everyone who has contributed code and reported issues and pull requests!
 
 
 
-###TODO
-<br>首页listview上拉加载更多数据的接口不适用，所以选择加载了加载相同的数据。</br>
-<br>因消息、我的界面要与QQ服务端进行交互，没有实现功能。</br>
 
-###Version
+
+### Version
 <br>1.0实现大致功能----2016.11.26</br>
 <br>1.1完善注释、精简代码----2016.11.27</br>
