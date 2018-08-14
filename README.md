@@ -9,7 +9,7 @@ RealMoMo
    微信：[Real_Mo]()  
    邮箱：momo.weiye@gmail.com
 -------------
-####开发目的: 
+### 开发目的: 
 <br>1.加深掌握android各组件</br>
 <br>2.加深自定义view开发</br>
 <br>3.加深开源框架Retrofit2、Glide、PullToRefresh等使用</br>
@@ -41,52 +41,9 @@ RealMoMo
    
 
 ### 开发环境
-Android Studio2.0
+Android Studio3.0.1
 
 
-### 下载安装
-导入模块，重新配置适合你开发环境build.gradle文件
-
-```java  
-  
-apply plugin: 'com.android.application'
-
-android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
-
-    defaultConfig {
-        applicationId "momo.com.week7"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-    compile 'com.squareup.retrofit2:converter-scalars:2.0.2'
-    compile 'se.emilsjolander:stickylistheaders:2.7.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.youth.banner:banner:1.4.4'
-    compile 'com.belerweb:pinyin4j:2.5.1'
-    compile 'in.srain.cube:ultra-ptr:1.0.11'
-    compile 'cn.yipianfengye.android:zxing-library:2.1'
-}
-
-  
-```
 
 ### Thanks
 Everyone who has contributed code and reported issues and pull requests!
@@ -96,5 +53,6 @@ Everyone who has contributed code and reported issues and pull requests!
 
 
 ### Version
-<br>1.0实现大致功能----2016.11.26</br>
-<br>1.1完善注释、精简代码----2016.11.27</br>
+<br>version:1.0.0实现大致功能----2016.11.26</br>
+<br>version:1.1.0完善注释、精简代码----2016.11.27</br>
+<br>version:1.2.0更新项目配置----2018.8.14</br>
